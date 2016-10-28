@@ -16,7 +16,7 @@ namespace HNTeleBot
             XmlReader reader = XmlReader.Create(url);
             SyndicationFeed feed = SyndicationFeed.Load(reader);
             reader.Close();
-            return feed.Items;
+            return feed.Items.Take(5);
         }
     }
 }

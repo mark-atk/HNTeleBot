@@ -52,35 +52,7 @@ namespace HNTeleBot
 
         private static async void BotOnInlineQueryReceived(object sender, InlineQueryEventArgs inlineQueryEventArgs)
         {
-            InlineQueryResult[] results = {
-                new InlineQueryResultLocation
-                {
-                    Id = "1",
-                    Latitude = 40.7058316f, // displayed result
-                    Longitude = -74.2581888f,
-                    Title = "New York",
-                    InputMessageContent = new InputLocationMessageContent // message if result is selected
-                    {
-                        Latitude = 40.7058316f,
-                        Longitude = -74.2581888f,
-                    }
-                },
-
-                new InlineQueryResultLocation
-                {
-                    Id = "2",
-                    Longitude = 52.507629f, // displayed result
-                    Latitude = 13.1449577f,
-                    Title = "Berlin",
-                    InputMessageContent = new InputLocationMessageContent // message if result is selected
-                    {
-                        Longitude = 52.507629f,
-                        Latitude = 13.1449577f
-                    }
-                }
-            };
-
-            await Bot.AnswerInlineQueryAsync(inlineQueryEventArgs.InlineQuery.Id, results, isPersonal: true, cacheTime: 0);
+            //need to implement for More News Results
         }
 
         private static async void BotOnMessageReceived(object sender, MessageEventArgs messageEventArgs)
@@ -92,22 +64,13 @@ namespace HNTeleBot
             Console.WriteLine("Message received: " + message.Text);
             if (message.Text.StartsWith("/news")) // send a photo
             {
-                int count = 0;
                 Feed.GetFeed().ToList().ForEach(async feedItem =>
                 {
-                    if (count > 5)
-                    {
+                    string subject = feedItem.Title.Text;
+                    string link = feedItem.Links[0].Uri.AbsoluteUri;
+                    string messageItem = String.Concat(subject, " : ", link);
 
-                    }
-                    else
-                    {
-                        string subject = feedItem.Title.Text;
-                        string link = feedItem.Links[0].Uri.AbsoluteUri;
-                        string messageItem = String.Concat(subject, " : ", link);
-
-                        await Bot.SendTextMessageAsync(message.Chat.Id, messageItem);
-                        count++;
-                    }
+                    await Bot.SendTextMessageAsync(message.Chat.Id, messageItem);
                 });
 
             }
