@@ -8,7 +8,6 @@ namespace HNTeleBot
 {
     public static class ApiCode
     {
-        public static string Code = "282493687:AAFCAAAF0Im0e2TumAWrZKrPOrtXNEmSIsU";
-
+        public static string Code = "282493687:AAFCAAAF0Im0e2TumAWrZKrPOrtXNEmSIsU_TEST";
     }
 }
