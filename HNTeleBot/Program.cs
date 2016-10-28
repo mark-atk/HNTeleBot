@@ -86,87 +86,32 @@ namespace HNTeleBot
             var message = messageEventArgs.Message;
 
             if (message == null || message.Type != MessageType.TextMessage) return;
-
-            if (message.Text.StartsWith("/inline")) // send inline keyboard
+            
+            if (message.Text.StartsWith("/news")) // send a photo
             {
-                await Bot.SendChatActionAsync(message.Chat.Id, ChatAction.Typing);
-
-                var keyboard = new InlineKeyboardMarkup(new[]
+                int count = 0;
+                Feed.GetFeed().ToList().ForEach(async feedItem =>
                 {
-                    new[] // first row
+                    if (count > 5)
                     {
-                        new InlineKeyboardButton("1.1"),
-                        new InlineKeyboardButton("1.2"),
-                    },
-                    new[] // second row
+
+                    }
+                    else
                     {
-                        new InlineKeyboardButton("2.1"),
-                        new InlineKeyboardButton("2.2"),
+                        string subject = feedItem.Title.Text;
+                        string link = feedItem.Links[0].Uri.AbsoluteUri;
+                        string messageItem = String.Concat(subject, " : ", link);
+
+                        await Bot.SendTextMessageAsync(message.Chat.Id, messageItem);
+                        count++;
                     }
                 });
 
-                await Task.Delay(500); // simulate longer running task
-
-                await Bot.SendTextMessageAsync(message.Chat.Id, "Choose",
-                    replyMarkup: keyboard);
-            }
-            else if (message.Text.StartsWith("/keyboard")) // send custom keyboard
-            {
-                var keyboard = new ReplyKeyboardMarkup(new[]
-                {
-                    new [] // first row
-                    {
-                        new KeyboardButton("1.1"),
-                        new KeyboardButton("1.2"),
-                    },
-                    new [] // last row
-                    {
-                        new KeyboardButton("2.1"),
-                        new KeyboardButton("2.2"),
-                    }
-                });
-
-                await Bot.SendTextMessageAsync(message.Chat.Id, "Choose",
-                    replyMarkup: keyboard);
-            }
-            else if (message.Text.StartsWith("/photo")) // send a photo
-            {
-                await Bot.SendChatActionAsync(message.Chat.Id, ChatAction.UploadPhoto);
-
-                const string file = @"C:\Test\Cat.jpg";
-
-                var fileName = file.Split('\\').Last();
-
-                using (var fileStream = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.Read))
-                {
-                    var fts = new FileToSend(fileName, fileStream);
-
-                    await Bot.SendPhotoAsync(message.Chat.Id, fts, "Nice Picture");
-                }
-            }
-            else if (message.Text.StartsWith("/request")) // request location or contact
-            {
-                var keyboard = new ReplyKeyboardMarkup(new[]
-                {
-                    new KeyboardButton("Location")
-                    {
-                        RequestLocation = true
-                    },
-                    new KeyboardButton("Contact")
-                    {
-                        RequestContact = true
-                    },
-                });
-
-                await Bot.SendTextMessageAsync(message.Chat.Id, "Who or Where are you?", replyMarkup: keyboard);
             }
             else
             {
                 var usage = @"Usage:
-/inline   - send inline keyboard
-/keyboard - send custom keyboard
-/photo    - send a photo
-/request  - request location or contact
+/news   - gets top 5 Hacker News Stories.
 ";
 
                 await Bot.SendTextMessageAsync(message.Chat.Id, usage,
