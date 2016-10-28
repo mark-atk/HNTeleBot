@@ -22,6 +22,7 @@ namespace HNTeleBot
 
         static void Main(string[] args)
         {
+            Console.WriteLine("Bot starting...");
             Bot.OnCallbackQuery += BotOnCallbackQueryReceived;
             Bot.OnMessage += BotOnMessageReceived;
             Bot.OnMessageEdited += BotOnMessageReceived;
@@ -34,6 +35,7 @@ namespace HNTeleBot
             Console.Title = me.Username;
 
             Bot.StartReceiving();
+            Console.WriteLine("Bot started.");
             Console.ReadLine();
             Bot.StopReceiving();
         }
@@ -86,7 +88,8 @@ namespace HNTeleBot
             var message = messageEventArgs.Message;
 
             if (message == null || message.Type != MessageType.TextMessage) return;
-            
+
+            Console.WriteLine("Message received: " + message.Text);
             if (message.Text.StartsWith("/news")) // send a photo
             {
                 int count = 0;
