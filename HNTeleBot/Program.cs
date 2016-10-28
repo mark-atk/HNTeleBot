@@ -18,7 +18,7 @@ namespace HNTeleBot
     {
         //282493687:AAFCAAAF0Im0e2TumAWrZKrPOrtXNEmSIsU
 
-        private static readonly TelegramBotClient Bot = new TelegramBotClient("282493687:AAFCAAAF0Im0e2TumAWrZKrPOrtXNEmSIsU");
+        private static readonly TelegramBotClient Bot = new TelegramBotClient(ApiCode.Code);
 
         static void Main(string[] args)
         {
@@ -87,7 +87,7 @@ namespace HNTeleBot
 
         private static async void BotOnCallbackQueryReceived(object sender, CallbackQueryEventArgs callbackQueryEventArgs)
         {
-            await Bot.AnswerCallbackQueryAsync(callbackQueryEventArgs.CallbackQuery.Id,
+            await Bot.AnswerCallbackQueryAsync(callbackQueryEventArgs.CallbackQuery.Id, 
                 $"Received {callbackQueryEventArgs.CallbackQuery.Data}");
         }
     }
